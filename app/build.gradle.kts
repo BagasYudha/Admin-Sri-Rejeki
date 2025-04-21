@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+
+    // Google services
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -33,10 +36,14 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    viewBinding {
+        enable = true
+    }
 }
 
 dependencies {
-
+    // Default
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -45,4 +52,19 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Firebase Realtime Database
+    implementation("com.google.firebase:firebase-database-ktx:20.1.0")
+
+    // Firebase Authentication
+    implementation("com.google.firebase:firebase-auth:22.3.0")
+
+    // Firebase BoM (biar semua versi Firebase sinkron)
+    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+
+    // Library untuk Fused Location Provider
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+
+    // Material Compose
+    implementation("com.google.android.material:material:1.11.0")
 }
