@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "126952703347",
+    "firebase_url": "https://sri-rejeki-50d2e-default-rtdb.firebaseio.com",
+    "project_id": "sri-rejeki-50d2e",
+    "storage_bucket": "sri-rejeki-50d2e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126952703347:android:434ba755cd755a1bbb7106",
+        "android_client_info": {
+          "package_name": "com.example.adminsrirejeki"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC52TvmGN5Lt8OO4xz1r5Q-KatdkKleaLQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126952703347:android:90bbbc29e16cbf3ebb7106",
+        "android_client_info": {
+          "package_name": "com.example.sri_rejeki_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC52TvmGN5Lt8OO4xz1r5Q-KatdkKleaLQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
