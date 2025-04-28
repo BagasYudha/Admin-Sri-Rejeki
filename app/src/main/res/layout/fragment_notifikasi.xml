@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".Notifikasi.NotifikasiFragment">
 
     <!-- Guideline 4% dari kiri -->
@@ -40,15 +41,28 @@
         app:layout_constraintGuide_percent="0.96" />
 
     <TextView
-        android:id="@+id/tvDashboard"
-        android:layout_width="wrap_content"
+        android:id="@+id/titleNotifikasi"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Notifikasi"
-        android:textSize="24sp"
+        android:layout_marginTop="24sp"
+        android:gravity="center"
+        android:textSize="20sp"
         android:textColor="@color/black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:fontFamily="@font/inter_semibold"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/guidelineTop"/>
+
+    <!-- Divider Line -->
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1.5dp"
+        android:background="@color/myBlue"
+        android:layout_marginTop="16sp"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@+id/titleNotifikasi" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
