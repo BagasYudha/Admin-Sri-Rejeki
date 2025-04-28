@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/dashboardFragment"
+        android:title="Dashboard"
+        android:icon="@drawable/dashboard_icon" />
+    <item
+        android:id="@+id/presensiFragment"
+        android:title="Presensi"
+        android:icon="@drawable/presensi_icon"/>
+    <item
+        android:id="@+id/notifikasiFragment"
+        android:title="Notifikasi"
+        android:icon="@drawable/notifikasi_icon"/>
+</menu>
