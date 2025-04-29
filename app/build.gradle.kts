@@ -4,6 +4,8 @@ plugins {
 
     // Google services
     id("com.google.gms.google-services")
+
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -76,4 +78,7 @@ dependencies {
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
+
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 }

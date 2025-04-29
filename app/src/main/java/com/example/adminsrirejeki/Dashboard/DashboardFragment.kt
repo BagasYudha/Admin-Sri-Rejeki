@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.adminsrirejeki.R
 import com.example.adminsrirejeki.databinding.FragmentDashboardBinding
@@ -30,8 +31,11 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        karyawanAdapter = KaryawanAdapter(listKaryawan) {
+            findNavController().navigate(R.id.action_dashboardFragment_to_profileFragment)
+        }
+
         // setup RecyclerView
-        karyawanAdapter = KaryawanAdapter(listKaryawan)
         binding.rvRiwayatPresensi.layoutManager = LinearLayoutManager(requireContext())
         binding.rvRiwayatPresensi.adapter = karyawanAdapter
 
