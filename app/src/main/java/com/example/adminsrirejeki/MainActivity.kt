@@ -14,15 +14,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         FirebaseApp.initializeApp(this)
 
+        // Inisialisasi binding dulu
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        enableEdgeToEdge()
+        enableEdgeToEdge() // <-- boleh setelah setContentView
 
-        // NAVBAR SETUP
-        // Menghubungkan NavController dengan NavHostFragment
         val navController = findNavController(R.id.fragmentContainerView)
 
         val navOptions = NavOptions.Builder()
@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
             .setPopExitAnim(R.anim.fade_out)
             .build()
 
-        // Setup BottomNavigationView dengan NavController dan animasi
         binding.bottomBar.setOnItemSelectedListener { item ->
             val destinationId = when (item.itemId) {
                 R.id.dashboardFragment -> R.id.dashboardFragment
@@ -41,16 +40,13 @@ class MainActivity : AppCompatActivity() {
                 else -> throw IllegalArgumentException("Unexpected item selected")
             }
 
-            navController.navigate(destinationId, null, navOptions)
+            // Hindari re-navigate ke destinasi yang sama
+            if (navController.currentDestination?.id != destinationId) {
+                navController.navigate(destinationId, null, navOptions)
+            }
+
             true
         }
-        // NAVBAR SETUP END
-
-
-//        binding.buttonTest.setOnClickListener {
-//            val intent = Intent(this, TestActivity::class.java)
-//            startActivity(intent)
-//        }
-
     }
+
 }
