@@ -11,6 +11,7 @@ class KaryawanRepository {
                 val list = mutableListOf<Karyawan>()
                 for (data in snapshot.children) {
                     val karyawan = data.getValue(Karyawan::class.java)
+                    karyawan?.id = data.key  // <--- ini penting
                     if (karyawan != null) list.add(karyawan)
                 }
                 onResult(list)

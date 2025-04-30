@@ -1,8 +1,9 @@
 package com.example.adminsrirejeki.Dashboard
 
 data class Karyawan(
-    val fullname: String? = null,
-    val username: String? = null,
-    val email: String? = null,
-    val password: String? = null
+    var id: String? = null,
+    var fullname: String? = null,
+    var username: String? = null,
+    var email: String? = null,
+    var password: String? = null
 )
