@@ -1,5 +1,6 @@
 package com.example.adminsrirejeki.Dashboard
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ class KaryawanAdapter(
         fun bind(karyawan: Karyawan) {
             binding.tvNama.text = karyawan.fullname ?: "Tidak diketahui"
             binding.itemKaryawan.setOnClickListener {
+                Log.d("MyDebugKaryawanAdapter", "Item clicked: $karyawan")
                 onItemClick(karyawan)
             }
         }

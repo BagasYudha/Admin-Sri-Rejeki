@@ -26,7 +26,7 @@
         tools:layout="@layout/fragment_notifikasi" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.adminsrirejeki.Dashboard.ProfileFragment"
+        android:name="com.example.adminsrirejeki.Dashboard.Profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile">
         <argument
