@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/white">
 
     <!-- Guideline 4% dari kiri -->
     <androidx.constraintlayout.widget.Guideline
@@ -39,27 +40,37 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.88" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_bar"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="8dp"
         android:background="@color/white"
-        app:itemActiveIndicatorStyle="@color/mySoftBlue"
-        app:itemIconTint="@color/bottom_nav_color"
-        app:itemTextColor="@color/bottom_nav_color"
-        app:labelVisibilityMode="unlabeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineBottom"
-        app:menu="@menu/bottom_menu" />
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        android:id="@+id/cardBottomBar"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <fragment
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:itemActiveIndicatorStyle="@color/mySoftBlue"
+            app:itemIconTint="@color/bottom_nav_color"
+            app:itemTextColor="@color/bottom_nav_color"
+            app:labelVisibilityMode="unlabeled"
+            app:menu="@menu/bottom_menu" />
+
+    </androidx.cardview.widget.CardView>
+
+
+<fragment
         android:id="@+id/fragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toBottomOf="@id/bottom_bar"
+        app:layout_constraintBottom_toBottomOf="@id/cardBottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

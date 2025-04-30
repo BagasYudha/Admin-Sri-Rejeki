@@ -52,5 +52,9 @@ class DashboardFragment : Fragment() {
         }
 
         viewModel.loadKaryawanVm()
+
+        binding.btnAdd.setOnClickListener{
+            findNavController().navigate(R.id.action_dashboardFragment_to_registerFragment)
+        }
     }
 }
