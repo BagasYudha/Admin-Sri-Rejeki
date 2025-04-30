@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
     </fragment>
     <fragment
         android:id="@+id/presensiFragment"
@@ -26,7 +29,7 @@
         tools:layout="@layout/fragment_notifikasi" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.adminsrirejeki.Dashboard.ProfileFragment"
+        android:name="com.example.adminsrirejeki.Dashboard.Profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile">
         <argument
@@ -36,5 +39,10 @@
             android:name="email"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.adminsrirejeki.Dashboard.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" />
 
 </navigation>

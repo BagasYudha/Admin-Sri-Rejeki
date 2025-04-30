@@ -73,7 +73,7 @@ dependencies {
     implementation ("com.google.android.gms:play-services-location:21.0.1")
 
     // Material Compose
-    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.8.0")
 
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")

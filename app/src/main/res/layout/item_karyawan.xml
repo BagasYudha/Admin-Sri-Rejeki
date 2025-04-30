@@ -9,7 +9,7 @@
         android:id="@+id/itemKaryawan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/border_biru_soft"
+        android:background="@drawable/stroke_blue_bg"
         android:orientation="vertical"
         android:padding="12dp"
         app:layout_constraintStart_toStartOf="parent"
