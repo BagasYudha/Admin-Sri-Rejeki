@@ -33,10 +33,10 @@ class ProfileFragment : Fragment() {
 
             if (karyawan != null) {
                 Log.d("ProfileFragment", "Nama Lengkap: ${karyawan.fullname}")
-                binding.tvFullName.text = karyawan.fullname
-                binding.tvUsername.text = karyawan.username
-                binding.tvEmail.text = karyawan.email
-                binding.tvPassword.text = karyawan.password
+                binding.etFullName.setText(karyawan.fullname ?: "Tidak diketahui")
+                binding.etUsername.setText(karyawan.username ?: "Tidak diketahui")
+                binding.etEmail.setText(karyawan.email ?: "Tidak diketahui")
+                binding.etPassword.setText(karyawan.password ?: "Tidak diketahui")
             } else {
                 Log.d("ProfileFragment", "Karyawan tidak ditemukan")
             }
