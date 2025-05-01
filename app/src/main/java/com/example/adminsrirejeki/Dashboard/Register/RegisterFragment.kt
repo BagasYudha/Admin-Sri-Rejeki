@@ -1,4 +1,4 @@
-package com.example.adminsrirejeki.Dashboard
+package com.example.adminsrirejeki.Dashboard.Register
 
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.fragment.findNavController
 import com.example.adminsrirejeki.databinding.FragmentRegisterBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.DatabaseReference
@@ -81,17 +82,14 @@ class RegisterFragment : Fragment() {
             "password" to password
         )
 
-        // Save data to Firebase Realtime Database
         database.child("users").push()
             .setValue(userData)
             .addOnSuccessListener {
-                Toast.makeText(context, "Akun berhasil dibuat", Toast.LENGTH_SHORT).show()
-                Log.d("RegisterFragment", "Data akun berhasil dikirim ke Realtime Database")
-                // Navigate to login screen or dashboard
+                Toast.makeText(requireContext(), "Akun berhasil dibuat", Toast.LENGTH_SHORT).show()
+                findNavController().navigateUp() // balik ke dashboard setelah sukses
             }
             .addOnFailureListener { e ->
-                Toast.makeText(context, "Gagal membuat akun: ${e.message}", Toast.LENGTH_SHORT).show()
-                Log.e("RegisterFragment", "Error mengirim data akun", e)
+                Toast.makeText(requireContext(), "Gagal membuat akun: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
