@@ -54,6 +54,10 @@ class ProfileFragment : Fragment() {
             showEditDalog()
         }
 
+        binding.btnHapus.setOnClickListener {
+            showDeleteDialog()
+        }
+
     }
 
     private fun showEditDalog() {
@@ -98,4 +102,36 @@ class ProfileFragment : Fragment() {
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.show()
     }
+
+    private fun showDeleteDialog() {
+        val bindingDialog = com.example.adminsrirejeki.databinding.DialogHapusBinding.inflate(LayoutInflater.from(requireContext()))
+        val dialog = AlertDialog.Builder(requireContext()).setView(bindingDialog.root).create()
+
+        bindingDialog.btnDialogCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        bindingDialog.btnDialogHapus.setOnClickListener {
+            val karyawan = viewModel.selectedKaryawan.value
+
+            if (karyawan != null && !karyawan.id.isNullOrEmpty()) {
+                val dbRef = FirebaseDatabase.getInstance().getReference("users")
+                dbRef.child(karyawan.id!!).removeValue()
+                    .addOnSuccessListener {
+                        Toast.makeText(requireContext(), "Data berhasil dihapus", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                        findNavController().navigateUp()
+                    }
+                    .addOnFailureListener { error ->
+                        Toast.makeText(requireContext(), "Gagal menghapus: ${error.message}", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                Toast.makeText(requireContext(), "Data karyawan tidak valid", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.show()
+    }
+
 }

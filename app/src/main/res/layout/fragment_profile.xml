@@ -194,21 +194,21 @@
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintTop_toBottomOf="@+id/tvPassword" />
 
-<!--    <com.google.android.material.button.MaterialButton-->
-<!--        android:id="@+id/btnHapus"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="32dp"-->
-<!--        android:padding="4dp"-->
-<!--        android:text="Hapus Karyawan"-->
-<!--        android:textColor="@android:color/holo_red_dark"-->
-<!--        app:strokeColor="@color/myDarkGray"-->
-<!--        app:backgroundTint="@android:color/holo_red_dark"-->
-<!--        android:background="@drawable/red_rounded_bg"-->
-<!--        android:backgroundTint="@null"-->
-<!--        app:cornerRadius="12dp"-->
-<!--        app:layout_constraintStart_toStartOf="@id/guidelineStart"-->
-<!--        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tvPassword"/>-->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnHapus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/red_rounded_bg"
+        android:backgroundTint="@null"
+        android:padding="4dp"
+        android:text="Hapus Karyawan"
+        android:textColor="@android:color/holo_red_dark"
+        app:backgroundTint="@android:color/holo_red_dark"
+        app:cornerRadius="12dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@+id/btnEdit"
+        app:strokeColor="@color/myDarkGray" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
