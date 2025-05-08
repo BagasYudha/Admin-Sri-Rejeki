@@ -12,8 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.findNavController
 import com.example.adminsrirejeki.databinding.FragmentRegisterBinding
 import com.google.firebase.FirebaseApp
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 class RegisterFragment : Fragment() {
 
@@ -23,8 +22,7 @@ class RegisterFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         binding = FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -33,7 +31,6 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         FirebaseApp.initializeApp(requireContext())
-
         database = FirebaseDatabase.getInstance().reference
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
@@ -42,7 +39,6 @@ class RegisterFragment : Fragment() {
             insets
         }
 
-        // Button for creating the account
         binding.btnCreateAccount.setOnClickListener {
             createAccount()
         }
@@ -75,22 +71,43 @@ class RegisterFragment : Fragment() {
             return
         }
 
-        val userData = hashMapOf(
-            "fullname" to fullname,
-            "username" to username,
-            "email" to email,
-            "password" to password
-        )
+        // Cek apakah username sudah digunakan
+        database.child("users").child(username).get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                Toast.makeText(context, "Username sudah terdaftar", Toast.LENGTH_SHORT).show()
+            } else {
+                // Simpan data user
+                val userData = mapOf(
+                    "fullname" to fullname,
+                    "username" to username,
+                    "email" to email,
+                    "password" to password
+                )
 
-        database.child("users").push()
-            .setValue(userData)
-            .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Akun berhasil dibuat", Toast.LENGTH_SHORT).show()
-                findNavController().navigateUp() // balik ke dashboard setelah sukses
+                database.child("users").child(username).setValue(userData)
+                    .addOnSuccessListener {
+                        // Tambahkan juga ke path gaji
+                        val gajiData = mapOf(
+                            "username" to username,
+                            "fullname" to fullname,
+                            "totalPresensi" to 0
+                        )
+                        database.child("gaji").child(username).setValue(gajiData)
+                            .addOnSuccessListener {
+                                Toast.makeText(context, "Akun berhasil dibuat", Toast.LENGTH_SHORT).show()
+                                findNavController().navigateUp()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(context, "Gagal menyimpan data gaji", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(context, "Gagal menyimpan data user", Toast.LENGTH_SHORT).show()
+                    }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "Gagal membuat akun: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        }.addOnFailureListener {
+            Toast.makeText(context, "Gagal memeriksa username", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun isPasswordStrong(password: String): Boolean {
