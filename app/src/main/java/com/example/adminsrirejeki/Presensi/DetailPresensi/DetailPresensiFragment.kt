@@ -1,5 +1,6 @@
 package com.example.adminsrirejeki.Presensi.DetailPresensi
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -9,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adminsrirejeki.R
+import com.google.android.material.button.MaterialButton
 import com.google.firebase.database.*
-import java.text.SimpleDateFormat
 import java.util.*
 
 class DetailPresensiFragment : Fragment() {
@@ -21,6 +22,11 @@ class DetailPresensiFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var database: DatabaseReference
+    private lateinit var btnPenggajian: MaterialButton
+
+    private var totalPresensi: Int = 0
+    private var username: String? = null
+    private var fullname: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,14 +38,17 @@ class DetailPresensiFragment : Fragment() {
         tvTotalPresensi = view.findViewById(R.id.tvTotalPresensi)
         spinnerBulan = view.findViewById(R.id.spinnerBulan)
         recyclerView = view.findViewById(R.id.rvDetailPresensi)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        btnPenggajian = view.findViewById(R.id.btnPenggajian)
 
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val savedUsername = sharedPreferences.getString("username", null)
 
-        val fullname = arguments?.getString("fullname")
+        fullname = arguments?.getString("fullname")
         val totalPresensiFromArgs = arguments?.getInt("totalPresensi", -1)
         tvNama.text = fullname ?: "Nama Tidak Ditemukan"
+
+        username = arguments?.getString("username")
 
         val bulanList = listOf(
             "Januari", "Februari", "Maret", "April", "Mei", "Juni",
@@ -54,13 +63,16 @@ class DetailPresensiFragment : Fragment() {
         val currentMonthIndex = calendar.get(Calendar.MONTH)
         spinnerBulan.setSelection(currentMonthIndex)
 
-        val username = arguments?.getString("username")
         if (username != null) {
-            database = FirebaseDatabase.getInstance().getReference("gaji").child(username)
+            database = FirebaseDatabase.getInstance().getReference("gaji").child(username!!)
             database.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val totalPresensi = snapshot.child("totalPresensi").getValue(Int::class.java)
-                    tvTotalPresensi.text = "Presensi Beruntun: ${totalPresensi ?: totalPresensiFromArgs ?: 0}"
+                    totalPresensi = snapshot.child("totalPresensi").getValue(Int::class.java) ?: totalPresensiFromArgs
+                            ?: 0
+                    tvTotalPresensi.text = "Presensi Beruntun: $totalPresensi"
+
+                    // Aktifkan tombol jika >= 10
+                    btnPenggajian.isEnabled = totalPresensi >= 10
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -81,6 +93,10 @@ class DetailPresensiFragment : Fragment() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
+        btnPenggajian.setOnClickListener {
+            konfirmasiPenggajian()
         }
 
         return view
@@ -125,4 +141,42 @@ class DetailPresensiFragment : Fragment() {
             }
         })
     }
+
+    private fun konfirmasiPenggajian() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Konfirmasi Penggajian")
+            .setMessage("Apakah $fullname telah dilakukan penggajian?")
+            .setPositiveButton("OK") { _, _ ->
+                resetTotalPresensi()
+            }
+            .setNegativeButton("Batal", null)
+            .show()
+    }
+
+    private fun resetTotalPresensi() {
+        if (username != null) {
+            val gajiRef = FirebaseDatabase.getInstance().getReference("gaji").child(username!!)
+            gajiRef.child("totalPresensi").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val currentPresensi = snapshot.getValue(Int::class.java) ?: 0
+                    val updatedPresensi = (currentPresensi - 10).coerceAtLeast(0) // hindari negatif
+
+                    gajiRef.child("totalPresensi").setValue(updatedPresensi)
+                        .addOnSuccessListener {
+                            Toast.makeText(requireContext(), "Total presensi dikurangi 10", Toast.LENGTH_SHORT).show()
+                            tvTotalPresensi.text = "Presensi Beruntun: $updatedPresensi"
+                            btnPenggajian.isEnabled = updatedPresensi >= 10
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(requireContext(), "Gagal memperbarui presensi", Toast.LENGTH_SHORT).show()
+                        }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(requireContext(), "Gagal membaca presensi", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+    }
+
 }
