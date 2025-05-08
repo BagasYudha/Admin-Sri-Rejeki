@@ -38,9 +38,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-    viewBinding {
+    viewBinding{
         enable = true
+    }
+    buildFeatures {
+
     }
 }
 
@@ -74,11 +76,4 @@ dependencies {
 
     // Material Compose
     implementation("com.google.android.material:material:1.8.0")
-
-    // Navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
-
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 }
