@@ -13,7 +13,7 @@ import com.google.firebase.database.*
 class PresensiFragment : Fragment() {
 
     private var _binding: FragmentPresensiBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding ?: throw IllegalStateException("Binding is null")
     private lateinit var databaseRef: DatabaseReference
 
     override fun onCreateView(
@@ -27,8 +27,11 @@ class PresensiFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rvPresensi.layoutManager = LinearLayoutManager(requireContext())
-        fetchDataGaji()
+        // Pastikan binding tidak null
+        _binding?.let {
+            it.rvPresensi.layoutManager = LinearLayoutManager(requireContext())
+            fetchDataGaji()
+        }
     }
 
     private fun fetchDataGaji() {
@@ -36,6 +39,9 @@ class PresensiFragment : Fragment() {
 
         databaseRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                // Pastikan _binding tidak null sebelum mengakses binding
+                if (_binding == null) return
+
                 val listData = mutableListOf<Gaji>()
                 for (data in snapshot.children) {
                     val model = data.getValue(Gaji::class.java)
@@ -55,17 +61,19 @@ class PresensiFragment : Fragment() {
                         bundle
                     )
                 }
-                binding.rvPresensi.adapter = adapter
+
+                // Pastikan binding tidak null
+                _binding?.rvPresensi?.adapter = adapter
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Handle error jika perlu
+                // Tangani error jika diperlukan
             }
         })
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        _binding = null // Menghindari memory leaks
     }
 }
