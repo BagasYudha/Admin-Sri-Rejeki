@@ -3,7 +3,7 @@
     android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/white_rounded_bg"
+    android:background="@drawable/rounded_white_bg"
     android:padding="24dp">
 
     <ImageView
