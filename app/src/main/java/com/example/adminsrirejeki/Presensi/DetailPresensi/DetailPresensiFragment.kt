@@ -142,13 +142,9 @@ class DetailPresensiFragment : Fragment() {
     }
 
     private fun konfirmasiPenggajian() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Konfirmasi Penggajian")
-            .setMessage("Apakah $fullname telah dilakukan penggajian?")
-            .setPositiveButton("OK") { _, _ -> resetTotalPresensi() }
-            .setNegativeButton("Batal", null)
-            .show()
+        showConfirmationDialog()
     }
+
 
     private fun resetTotalPresensi() {
         if (!username.isNullOrEmpty()) {
@@ -175,4 +171,45 @@ class DetailPresensiFragment : Fragment() {
             })
         }
     }
+
+    private fun showConfirmationDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_konfirmasi_reset, null)
+        val builder = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.show()
+
+        val btnBatal = dialogView.findViewById<Button>(R.id.btnBatal)
+        val btnKonfirmasi = dialogView.findViewById<Button>(R.id.btnKonfirmasi)
+
+        btnBatal.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnKonfirmasi.setOnClickListener {
+            dialog.dismiss()
+            resetTotalPresensi()
+            showSuccessDialog()
+        }
+    }
+
+    private fun showSuccessDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_presensi_berhasil, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.show()
+
+        // Otomatis hilang setelah 2 detik
+        dialogView.postDelayed({
+            if (dialog.isShowing) dialog.dismiss()
+        }, 2000)
+    }
+
 }
