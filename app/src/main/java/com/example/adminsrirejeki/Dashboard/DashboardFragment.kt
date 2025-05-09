@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -56,5 +57,27 @@ class DashboardFragment : Fragment() {
         binding.btnAdd.setOnClickListener{
             findNavController().navigate(R.id.action_dashboardFragment_to_registerFragment)
         }
+
+        binding.searchEditText.addTextChangedListener { text ->
+            val query = text.toString()
+            filterKaryawan(query)
+        }
+
+        // Observasi LiveData untuk karyawanList
+        viewModel.karyawanList.observe(viewLifecycleOwner) { list ->
+            karyawanAdapter.updateList(list) // Mengupdate adapter dengan data karyawan terbaru
+        }
+
+    }
+    private fun filterKaryawan(query: String) {
+        val filteredList = viewModel.karyawanList.value?.filter {
+            it.fullname?.contains(query, ignoreCase = true) == true
+        } ?: emptyList()
+        karyawanAdapter = KaryawanAdapter(filteredList) { karyawan ->
+            viewModel.setSelectedKaryawanVm(karyawan)
+            findNavController().navigate(R.id.action_dashboardFragment_to_profileFragment)
+        }
+        binding.rvRiwayatPresensi.adapter = karyawanAdapter
+        karyawanAdapter.notifyDataSetChanged()
     }
 }
