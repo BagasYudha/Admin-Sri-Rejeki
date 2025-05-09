@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -42,13 +43,12 @@ class DetailPresensiFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val savedUsername = sharedPreferences.getString("username", null)
 
         fullname = arguments?.getString("fullname")
         val totalPresensiFromArgs = arguments?.getInt("totalPresensi", -1)
-        tvNama.text = fullname ?: "Nama Tidak Ditemukan"
-
         username = arguments?.getString("username")
+
+        tvNama.text = fullname ?: "Nama Tidak Ditemukan"
 
         val bulanList = listOf(
             "Januari", "Februari", "Maret", "April", "Mei", "Juni",
@@ -63,15 +63,13 @@ class DetailPresensiFragment : Fragment() {
         val currentMonthIndex = calendar.get(Calendar.MONTH)
         spinnerBulan.setSelection(currentMonthIndex)
 
-        if (username != null) {
+        if (!username.isNullOrEmpty()) {
             database = FirebaseDatabase.getInstance().getReference("gaji").child(username!!)
             database.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    totalPresensi = snapshot.child("totalPresensi").getValue(Int::class.java) ?: totalPresensiFromArgs
-                            ?: 0
+                    totalPresensi = snapshot.child("totalPresensi").getValue(Int::class.java)
+                        ?: totalPresensiFromArgs ?: 0
                     tvTotalPresensi.text = "Presensi Beruntun: $totalPresensi"
-
-                    // Aktifkan tombol jika >= 10
                     btnPenggajian.isEnabled = totalPresensi >= 10
                 }
 
@@ -87,8 +85,8 @@ class DetailPresensiFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val bulan = position
                 val tahun = calendar.get(Calendar.YEAR)
-                if (!savedUsername.isNullOrEmpty()) {
-                    tampilkanPresensiHarian(savedUsername, bulan, tahun)
+                if (!username.isNullOrEmpty()) {
+                    tampilkanPresensiHarian(username!!, bulan, tahun)
                 }
             }
 
@@ -133,6 +131,7 @@ class DetailPresensiFragment : Fragment() {
                     }
                 }
 
+                Log.d("DetailPresensi", "Data: ${presensiMap.size} item, Tanggal terakhir: $tanggalTerakhir")
                 recyclerView.adapter = DetailPresensiAdapter(tanggalList, presensiMap, tanggalTerakhir)
             }
 
@@ -146,20 +145,18 @@ class DetailPresensiFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Konfirmasi Penggajian")
             .setMessage("Apakah $fullname telah dilakukan penggajian?")
-            .setPositiveButton("OK") { _, _ ->
-                resetTotalPresensi()
-            }
+            .setPositiveButton("OK") { _, _ -> resetTotalPresensi() }
             .setNegativeButton("Batal", null)
             .show()
     }
 
     private fun resetTotalPresensi() {
-        if (username != null) {
+        if (!username.isNullOrEmpty()) {
             val gajiRef = FirebaseDatabase.getInstance().getReference("gaji").child(username!!)
             gajiRef.child("totalPresensi").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val currentPresensi = snapshot.getValue(Int::class.java) ?: 0
-                    val updatedPresensi = (currentPresensi - 10).coerceAtLeast(0) // hindari negatif
+                    val updatedPresensi = (currentPresensi - 10).coerceAtLeast(0)
 
                     gajiRef.child("totalPresensi").setValue(updatedPresensi)
                         .addOnSuccessListener {
@@ -178,5 +175,4 @@ class DetailPresensiFragment : Fragment() {
             })
         }
     }
-
 }

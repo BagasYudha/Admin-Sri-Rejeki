@@ -22,13 +22,12 @@ class DetailPresensiAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val tanggal = tanggalList[position]
-        // Cek apakah tanggal absensi lebih kecil dari tanggal absensi terakhir
         return if (tanggal <= tanggalAbsensiTerakhir && !presensiMap.containsKey(tanggal)) {
-            2 // Tanggal tanpa presensi
+            2 // Tidak masuk
         } else if (presensiMap.containsKey(tanggal)) {
-            1 // Tanggal dengan presensi
+            1 // Masuk
         } else {
-            0 // Tanggal tanpa presensi
+            0 // Belum ada data
         }
     }
 
@@ -43,17 +42,23 @@ class DetailPresensiAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val tanggal = tanggalList[position]
-        val tanggalFormatted = DATE_FORMAT.format(SimpleDateFormat("yyyy-MM-dd").parse(tanggal)!!)
+        val tanggalParsed = try {
+            SimpleDateFormat("yyyy-MM-dd").parse(tanggal)
+        } catch (e: Exception) {
+            null
+        }
+        val tanggalFormatted = tanggalParsed?.let { DATE_FORMAT.format(it) } ?: tanggal
+
         when (holder) {
             is MasukViewHolder -> {
                 val presensi = presensiMap[tanggal]!!
                 holder.bind(presensi, tanggalFormatted)
             }
             is TidakMasukViewHolder -> {
-                (holder as TidakMasukViewHolder).tvHari.text = tanggalFormatted
+                holder.tvHari.text = tanggalFormatted
             }
             is BelumAdaViewHolder -> {
-                (holder as BelumAdaViewHolder).tvHari.text = tanggalFormatted
+                holder.tvHari.text = tanggalFormatted
             }
         }
     }
@@ -61,11 +66,11 @@ class DetailPresensiAdapter(
     inner class MasukViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvJam: TextView = itemView.findViewById(R.id.tvJam)
         private val tvStatusPresensi: TextView = itemView.findViewById(R.id.tvStatusPresensi)
-        private val tvHari: TextView = itemView.findViewById(R.id.tvHari)
+        val tvHari: TextView = itemView.findViewById(R.id.tvHari)
 
         fun bind(presensi: Presensi, tanggal: String) {
             val waktuSplit = presensi.waktu.split(" ")
-            tvJam.text = waktuSplit.getOrNull(1)?.substring(0, 5) ?: "-"  // Menampilkan hanya jam dan menit
+            tvJam.text = waktuSplit.getOrNull(1)?.substring(0, 5) ?: "-"
             tvStatusPresensi.text = presensi.jenis_presensi.replace("Presensi Berhasil", "Berhasil")
             tvHari.text = tanggal
         }
@@ -79,5 +84,3 @@ class DetailPresensiAdapter(
         val tvHari: TextView = itemView.findViewById(R.id.tvHari)
     }
 }
-
-
