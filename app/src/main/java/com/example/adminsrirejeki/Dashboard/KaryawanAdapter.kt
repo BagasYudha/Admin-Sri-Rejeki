@@ -8,7 +8,7 @@ import com.example.adminsrirejeki.R
 import com.example.adminsrirejeki.databinding.ItemKaryawanBinding
 
 class KaryawanAdapter(
-    private val listKaryawan: List<Karyawan>,
+    private var listKaryawan: List<Karyawan>,  // ganti menjadi var untuk memodifikasi list
     private val onItemClick: (Karyawan) -> Unit
 ) : RecyclerView.Adapter<KaryawanAdapter.KaryawanViewHolder>() {
 
@@ -33,4 +33,10 @@ class KaryawanAdapter(
     }
 
     override fun getItemCount(): Int = listKaryawan.size
+
+    // Fungsi untuk update list karyawan di adapter
+    fun updateList(newList: List<Karyawan>) {
+        listKaryawan = newList
+        notifyDataSetChanged()
+    }
 }
