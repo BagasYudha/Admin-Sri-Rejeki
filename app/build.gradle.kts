@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId = "com.example.adminsrirejeki"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -77,4 +77,8 @@ dependencies {
 
     // Material Compose
     implementation("com.google.android.material:material:1.8.0")
+
+    //badge notifikasi
+    implementation ("com.google.android.material:material:1.11.0")
+
 }
