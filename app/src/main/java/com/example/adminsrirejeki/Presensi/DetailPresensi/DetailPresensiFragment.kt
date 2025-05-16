@@ -156,9 +156,11 @@ class DetailPresensiFragment : Fragment() {
 
                     gajiRef.child("totalPresensi").setValue(updatedPresensi)
                         .addOnSuccessListener {
-                            Toast.makeText(requireContext(), "Total presensi dikurangi 10", Toast.LENGTH_SHORT).show()
                             tvTotalPresensi.text = "Presensi Beruntun: $updatedPresensi"
                             btnPenggajian.isEnabled = updatedPresensi >= 10
+
+                            // Kirim notifikasi setelah berhasil reset
+                            kirimNotifikasi()
                         }
                         .addOnFailureListener {
                             Toast.makeText(requireContext(), "Gagal memperbarui presensi", Toast.LENGTH_SHORT).show()
@@ -172,6 +174,7 @@ class DetailPresensiFragment : Fragment() {
         }
     }
 
+
     private fun showConfirmationDialog() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_konfirmasi_reset, null)
         val builder = AlertDialog.Builder(requireContext())
@@ -181,6 +184,12 @@ class DetailPresensiFragment : Fragment() {
         val dialog = builder.create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.show()
+
+        // Atur lebar dialog ke 300dp (dari dimens)
+        dialog.window?.setLayout(
+            resources.getDimensionPixelSize(R.dimen.dialog_width),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
 
         val btnBatal = dialogView.findViewById<Button>(R.id.btnBatal)
         val btnKonfirmasi = dialogView.findViewById<Button>(R.id.btnKonfirmasi)
@@ -196,6 +205,7 @@ class DetailPresensiFragment : Fragment() {
         }
     }
 
+
     private fun showSuccessDialog() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_presensi_berhasil, null)
         val dialog = AlertDialog.Builder(requireContext())
@@ -206,10 +216,41 @@ class DetailPresensiFragment : Fragment() {
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.show()
 
-        // Otomatis hilang setelah 2 detik
+        dialog.window?.setLayout(
+            resources.getDimensionPixelSize(R.dimen.dialog_width),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
         dialogView.postDelayed({
             if (dialog.isShowing) dialog.dismiss()
         }, 2000)
+    }
+
+
+    private fun kirimNotifikasi() {
+        if (!username.isNullOrEmpty() && !fullname.isNullOrEmpty()) {
+            val notifikasiRef = FirebaseDatabase.getInstance().getReference("notifikasi").push()
+
+            val waktuSekarang = Calendar.getInstance().time
+            val formatter = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val waktuString = formatter.format(waktuSekarang)
+
+            val notifikasiData = mapOf(
+                "username" to username,
+                "fullname" to fullname,
+                "waktu" to waktuString,
+                "status" to "penggajian",
+                "seen" to false
+            )
+
+            notifikasiRef.setValue(notifikasiData)
+                .addOnSuccessListener {
+                    Log.d("Notifikasi", "Notifikasi berhasil dikirim.")
+                }
+                .addOnFailureListener {
+                    Log.e("Notifikasi", "Gagal mengirim notifikasi.", it)
+                }
+        }
     }
 
 }
